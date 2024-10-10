@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from "@/data/constants";
+import { API_ENDPOINT } from "@/lib/data/constants";
 import React, {
   createContext,
   useContext,

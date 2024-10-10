@@ -1,6 +1,6 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { appConfig } from "@/data/constants";
+import { appConfig } from "@/lib/data/constants";
 
 export function SearchBox() {
   if (!appConfig.hasSearch) {

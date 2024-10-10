@@ -6,6 +6,7 @@ import { default as flattenColorPalette } from "tailwindcss/lib/util/flattenColo
 
 export default {
   content: ["./app/**/{**,.client,.server}/**/*.{js,jsx,ts,tsx}"],
+  darkMode: ["class"],
   theme: {
     extend: {
       ...theme,

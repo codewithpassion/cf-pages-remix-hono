@@ -3,17 +3,19 @@ import React, {
   RefAttributes,
   useEffect,
 } from "react";
-import { Outlet, Link, NavLink, useLocation } from "react-router-dom";
+import { Outlet, Link, NavLink, useLocation } from "@remix-run/react";
 import {
   CircleUser,
   Menu,
   Package2,
   MicVocal,
   LucideProps,
+  Moon,
+  Sun,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "~/components/ui/badge";
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +23,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { router } from "@/routes";
-import { APP_NAME } from "@/data/constants";
+} from "~/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import { APP_NAME } from "~/lib/data/constants";
 import { SearchBox } from "./search-box";
-import { useAuth } from "./AuthProvider";
+import { useTheme } from "~/hooks/useTheme";
+// import { useAuth } from "./AuthProvider";
 
 type IconType = ForwardRefExoticComponent<
   Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
@@ -38,34 +40,28 @@ function NavigationItems({
   className: (isActive: boolean) => string;
 }) {
   const location = useLocation();
-  const navigationItems = router?.routes[0].children?.filter(
-    (route) => route.handle
-  );
+  const navigationItems = [
+    { path: "/dashboard", label: "Dashboard", icon: Package2 },
+    // Add more navigation items as needed
+  ];
 
-  return navigationItems?.map((route) => {
-    const Icon = route.handle?.icon as IconType; // iconMapping[route.handle.icon as keyof typeof iconMapping];
-    const isActive =
-      location.pathname === route.path ||
-      (route.index && location.pathname === "/");
+  return navigationItems.map((item) => {
+    const isActive = location.pathname === item.path;
     return (
       <NavLink
-        key={route.path || "index"}
-        to={route.path || "/"}
-        className={className(isActive || false)}
+        key={item.path}
+        to={item.path}
+        className={className(isActive)}
       >
-        <Icon className="h-4 w-4" />
-        {route.handle.label}
-        {route.handle.badge && (
-          <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-            {route.handle.badge}
-          </Badge>
-        )}
+        <item.icon className="h-4 w-4" />
+        {item.label}
       </NavLink>
     );
   });
 }
-export function DashboardLayout() {
-  const { isAuthenticated, loading, gotoLogin } = useAuth();
+
+export function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, loading, gotoLogin } = { isAuthenticated: true, loading: false, gotoLogin: ()=> {}} //useAuth();
   useEffect(() => {
     if (!isAuthenticated && !loading) {
       gotoLogin();
@@ -80,7 +76,7 @@ export function DashboardLayout() {
           <div className="flex flex-col">
             <Header />
             <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-              <Outlet />
+              {children}
             </main>
           </div>
         </>
@@ -90,19 +86,16 @@ export function DashboardLayout() {
 }
 
 export function Sidebar() {
-  const { refreshToken } = useAuth();
+  const { refreshToken } = { refreshToken: () => {} } //useAuth();
+  const { theme } = useTheme();
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
-            <MicVocal className="h-6 w-6" />
+          <Link to="/" className="flex items-center gap-2 font-semibold text-black dark:text-white">
+            <MicVocal className="h-6 w-6 "/>
             <span className="">{APP_NAME}</span>
           </Link>
-          {/* <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
-            <Bell className="h-4 w-4" />
-            <span className="sr-only">Toggle notifications</span>
-          </Button> */}
         </div>
         <div className="flex-1">
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -117,27 +110,13 @@ export function Sidebar() {
         </div>
         <div className="mt-auto p-4">
           <Button
-            variant="secondary"
+            variant="default"
             size="sm"
-            className="w-full"
+            className="w-full color-secondary-foreground"
             onClick={refreshToken}
           >
             refresh token
           </Button>
-          {/* <Card>
-            <CardHeader className="p-2 pt-0 md:p-4">
-              <CardTitle>Upgrade to Pro</CardTitle>
-              <CardDescription>
-                Unlock all features and get unlimited access to our support
-                team.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-2 pt-0 md:p-4 md:pt-0">
-              <Button size="sm" className="w-full">
-                Upgrade
-              </Button>
-            </CardContent>
-          </Card> */}
         </div>
       </div>
     </div>
@@ -145,7 +124,9 @@ export function Sidebar() {
 }
 
 export function Header() {
-  const { logout, authenticatedUser } = useAuth();
+  const { logout, authenticatedUser } = { logout: () => {}, authenticatedUser: { email: 'unknown' } } //useAuth();
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -174,27 +155,21 @@ export function Header() {
               }
             />
           </nav>
-          {/* <div className="mt-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Upgrade to Pro</CardTitle>
-                <CardDescription>
-                  Unlock all features and get unlimited access to our support
-                  team.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button size="sm" className="w-full">
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
-          </div> */}
         </SheetContent>
       </Sheet>
       <div className="w-full flex-1">
         <SearchBox />
       </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={toggleTheme}
+        className="mr-2"
+      >
+        <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" color="black" />
+        <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="secondary" size="icon" className="rounded-full">
@@ -206,12 +181,9 @@ export function Header() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuLabel className="font-light">
-            {authenticatedUser?.email || "unknown"}
+            {authenticatedUser.email}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {/* <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Support</DropdownMenuItem>
-          <DropdownMenuSeparator /> */}
           <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

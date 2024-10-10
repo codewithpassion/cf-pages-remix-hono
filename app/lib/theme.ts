@@ -16,56 +16,29 @@ export default {
     background: "hsl(var(--background))",
     foreground: "hsl(var(--foreground))",
     primary: {
-      DEFAULT: "hsl(181.6, 30.1%, 24.1%)",
-      50: "hsl(200, 10%, 97%)",
-      100: "hsl(200, 10%, 92%)",
-      200: "hsl(200, 10%, 87%)",
-      300: "hsl(200, 10%, 82%)",
-      400: "hsl(200, 10%, 77%)",
-      500: "hsl(100, 10%, 72%)",
-      600: "hsl(200, 10%, 67%)",
-      700: "hsl(200, 10%, 62%)",
-      800: "hsl(200, 10%, 57%)",
-      900: "hsl(200, 10%, 52%)",
-      950: "hsl(200, 10%, 47%)",
-      foreground: "hsl(165.6, 19.1%, 74.3%)",
+      DEFAULT: "hsl(var(--primary))",
+      foreground: "hsl(var(--primary-foreground))",
+      // 50: "hsl(200, 10%, 97%)",
+      // 100: "hsl(200, 10%, 92%)",
+      // 200: "hsl(200, 10%, 87%)",
+      // 300: "hsl(200, 10%, 82%)",
+      // 400: "hsl(200, 10%, 77%)",
+      // 500: "hsl(100, 10%, 72%)",
+      // 600: "hsl(200, 10%, 67%)",
+      // 700: "hsl(200, 10%, 62%)",
+      // 800: "hsl(200, 10%, 57%)",
+      // 900: "hsl(200, 10%, 52%)",
+      // 950: "hsl(200, 10%, 47%)",
+      // foreground: "hsl(165.6, 19.1%, 74.3%)",
       //#2b4f50
     },
     secondary: {
-      DEFAULT: "hsl(25.2,68.1%,76.7%)", // #ecbd9b
+      DEFAULT: "hsl(var(--secondary))",
       foreground: "hsl(var(--secondary-foreground))",
-      one: "hsl(25.2,68.1%,76.7%)",
-      two: "hsl(21.2,44.3%,45.1%)",
-      three: "hsl(28.9,47.4%,88.8%)",
-      four: "hsl(58.1,17.5%,65.3%)",
-      five: "hsl(164.3,9.2%,50.8%)",
-    },
-
-    /* Breathout colors
-
- Primary background: #b1cac4 | hsl(165.6, 19.1%, 74.3%);
- Primary foreground: #2b4f50 | hsl(181.6, 30.1%, 24.1%)
-
- Secondary:
- one: #ecbd9b   | hsl(25.2, 68.1%, 76.7%)
- two: #a66440   | hsl(21.2, 44.3%, 45.1%)
- three: #f0e2d5 | hsl(28.9, 47.4%, 88.8%)
- four: #b6b597  | hsl(58.1, 17.5%, 65.3%)
- five: #768d87  | hsl(164.3, 9.2%, 50.8%)
- */
-
-    breathe: {
-      "primary-foreground": "hsl(165.6, 19.1%, 74.3%)",
-      "primary-background": "hsl(181.6, 30.1%, 24.1%)",
-      "secondary-one": "hsl(25.2, 68.1%, 76.7%)",
-      "secondary-two": "hsl(21.2, 44.3%, 45.1%)",
-      "secondary-three": "hsl(28.9, 47.4%, 88.8%)",
-      "secondary-four": "hsl(58.1, 17.5%, 65.3%)",
-      "secondary-five": "hsl(164.3, 9.2%, 50.8%)",
     },
 
     destructive: {
-      DEFAULT: "hsl(var(--destructive))", // This is #ff4d4f
+      DEFAULT: "hsl(var(--destructive))", 
       foreground: "hsl(var(--destructive-foreground))",
     },
     muted: {
