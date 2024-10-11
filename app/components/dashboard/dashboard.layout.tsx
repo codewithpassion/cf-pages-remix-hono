@@ -64,9 +64,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading, gotoLogin } = { isAuthenticated: true, loading: false, gotoLogin: () => { } } //useAuth();
   useEffect(() => {
     if (!isAuthenticated && !loading) {
-      if (appConfig.redirectToLogin) {
-        gotoLogin();
-      }
+      gotoLogin();
     }
   }, [gotoLogin, isAuthenticated, loading]);
 

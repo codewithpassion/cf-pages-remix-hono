@@ -57,7 +57,9 @@ export const AuthProvider: React.FC<{
   } | null>(null);
 
   const gotoLogin = useCallback(() => {
-    navigate(appConfig.loginUrl);
+    if (appConfig.redirectToLogin) {
+      navigate(appConfig.loginUrl);
+    }
   }, [navigate]);
 
   useEffect(() => {
