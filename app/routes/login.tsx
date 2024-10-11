@@ -7,19 +7,20 @@ import { Ref, useRef, useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { LoginValidating } from "~/components/dashboard/login.validating";
 import { useTheme } from "~/hooks/useTheme";
-import Logo from "~/components/logo";
 import { MetaFunction } from "@remix-run/cloudflare";
+import logo from "@/assets/login.png"
+import { appConfig } from "~/lib/data/constants";
 
 export const description =
   "A login page with two columns. The first column has the login form with email and password. There's a Forgot your passwork link and a link to sign up if you do not have an account. The second column has a cover image.";
 
 export const meta: MetaFunction = () => {
-    return [
-      { title: "Login | New Remix App" },
-      { name: "description", content: "Login to Remix!" },
-    ];
-  };
-  
+  return [
+    { title: `Login | ${appConfig.appName}` },
+    { name: "description", content: `Login to ${appConfig.appName}` },
+  ];
+};
+
 export default function Login() {
   const email: Ref<HTMLInputElement> = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -28,7 +29,6 @@ export default function Login() {
   const [token, setToken] = useState("");
   const [validating, setValidating] = useState(false);
   const [emailAddress, setEmailAddress] = useState("");
-  const { theme } = useTheme();
 
   const { login, isAuthenticated, navigate } = useAuth();
 
@@ -73,14 +73,36 @@ export default function Login() {
       }
     }
   };
-  // const logo = theme === "dark" ? remixDark : remixLight;
-  // console.log("theme", theme);
 
 
   return (
-    <div className="w-full h-screen items-stretch justify-stretch content-stretch flex flex-col lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex lg:hidden lg:h-screen flex-grow items-center justify-center p-20">
-        <Logo />
+    <div className="
+      w-full 
+      h-screen 
+      items-stretch 
+      justify-stretch 
+      content-stretch 
+      flex flex-col 
+      lg:grid lg:min-h-[600px] 
+      lg:grid-cols-2 
+      xl:min-h-[800px]">
+
+      <div className="
+      flex 
+      lg:hidden 
+      lg:h-screen 
+      items-center 
+      justify-stretch 
+      h-[50vh]
+      ">
+        <Image
+          src={logo}
+          alt="Image"
+          width="auto"
+          height="50vh"
+          className="block object-cover"
+        />
+
       </div>
 
       <div className="flex items-center justify-center flex-grow py-12 ">
@@ -127,8 +149,14 @@ export default function Login() {
         </div>
       </div>
       <LoginValidating open={validating} token={token} />
-      <div className="hidden lg:flex h-screen items-center justify-center">
-        <Logo />
+      <div className="hidden lg:flex h-screen items-stretch justify-center">
+        <Image
+          src={logo}
+          alt="Image"
+          width="auto"
+          height="auto"
+          className="block h-full w-full object-cover"
+        />
       </div>
     </div>
   );
