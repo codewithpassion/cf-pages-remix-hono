@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from "@/lib/data/constants";
+import { API_ENDPOINT, appConfig } from "@/lib/data/constants";
 import React, {
   createContext,
   useContext,
@@ -57,7 +57,7 @@ export const AuthProvider: React.FC<{
   } | null>(null);
 
   const gotoLogin = useCallback(() => {
-    navigate("/");
+    navigate(appConfig.loginUrl);
   }, [navigate]);
 
   useEffect(() => {
