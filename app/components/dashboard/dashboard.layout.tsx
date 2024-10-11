@@ -25,7 +25,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
-import { APP_NAME } from "~/lib/data/constants";
+import { APP_NAME, appConfig } from "~/lib/data/constants";
 import { SearchBox } from "./search-box";
 import { useTheme } from "~/hooks/useTheme";
 // import { useAuth } from "./AuthProvider";
@@ -61,10 +61,12 @@ function NavigationItems({
 }
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading, gotoLogin } = { isAuthenticated: true, loading: false, gotoLogin: ()=> {}} //useAuth();
+  const { isAuthenticated, loading, gotoLogin } = { isAuthenticated: true, loading: false, gotoLogin: () => { } } //useAuth();
   useEffect(() => {
     if (!isAuthenticated && !loading) {
-      gotoLogin();
+      if (appConfig.redirectToLogin) {
+        gotoLogin();
+      }
     }
   }, [gotoLogin, isAuthenticated, loading]);
 
@@ -86,14 +88,14 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 }
 
 export function Sidebar() {
-  const { refreshToken } = { refreshToken: () => {} } //useAuth();
+  const { refreshToken } = { refreshToken: () => { } } //useAuth();
   const { theme } = useTheme();
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link to="/" className="flex items-center gap-2 font-semibold text-black dark:text-white">
-            <MicVocal className="h-6 w-6 "/>
+            <MicVocal className="h-6 w-6 " />
             <span className="">{APP_NAME}</span>
           </Link>
         </div>
@@ -101,8 +103,7 @@ export function Sidebar() {
           <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
             <NavigationItems
               className={(isActive) =>
-                `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                  isActive ? "bg-muted text-primary" : "text-muted-foreground"
+                `flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${isActive ? "bg-muted text-primary" : "text-muted-foreground"
                 }`
               }
             />
@@ -124,7 +125,7 @@ export function Sidebar() {
 }
 
 export function Header() {
-  const { logout, authenticatedUser } = { logout: () => {}, authenticatedUser: { email: 'unknown' } } //useAuth();
+  const { logout, authenticatedUser } = { logout: () => { }, authenticatedUser: { email: 'unknown' } } //useAuth();
   const { theme, toggleTheme } = useTheme();
 
   return (
@@ -147,10 +148,9 @@ export function Header() {
             </Link>
             <NavigationItems
               className={(isActive) =>
-                `mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${
-                  isActive
-                    ? "bg-muted text-foreground"
-                    : "text-muted-foreground hover:text-foreground"
+                `mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 ${isActive
+                  ? "bg-muted text-foreground"
+                  : "text-muted-foreground hover:text-foreground"
                 }`
               }
             />

@@ -4,6 +4,7 @@ const APP_NAME = "Remix App"
 export const appConfig = {
     hasSearch: true,
     loginUrl: "/login",
+    redirectToLogin: false,
 }
 
 
