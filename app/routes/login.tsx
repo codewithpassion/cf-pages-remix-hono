@@ -45,7 +45,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/admin");
+      navigate("/dashboard");
     } else {
       const savedEmail = localStorage.getItem("userEmail");
       if (savedEmail) {
@@ -108,13 +108,13 @@ export default function Login() {
       <div className="flex items-center justify-center flex-grow py-12 ">
         <div className="mx-auto grid w-[350px] gap-6 ">
           <div className="grid gap-2 ">
-            <h1 className="text-3xl font-bold font-serif text-secondary-two">
-              login
+            <h1 className="text-3xl font-bold text-secondary-two">
+              Login
             </h1>
           </div>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">email</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"

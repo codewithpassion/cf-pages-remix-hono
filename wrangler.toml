@@ -16,7 +16,10 @@ pages_build_output_dir = "./build/client"
 # Note: Use secrets to store sensitive data.
 # - https://developers.cloudflare.com/pages/functions/bindings/#secrets
 [vars]
-MY_VARIABLE = "production_value"
+AUTH_API_SERVER = "https://api.heimdall.rockyshoreslabs.io/"
+AUTH_API_KEY = ""
+AUTH_API_PROJECT = "connexus-coach"
+
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
 # Docs: https://developers.cloudflare.com/pages/functions/bindings/#workers-ai

@@ -5,6 +5,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useRef,
 } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 
@@ -46,12 +47,12 @@ export const AuthProvider: React.FC<{
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
-  const [accessToken, setAccessToken] = useState<{
+  const accessToken = useRef<{
     token: string;
     validTo: number;
     role: string;
   } | null>(null);
-  const [refreshToken, setRefreshToken] = useState<{
+  const refreshToken = useRef<{
     token: string;
     validTo: number;
   } | null>(null);
@@ -68,14 +69,13 @@ export const AuthProvider: React.FC<{
     }
     const _accessToken = localStorage.getItem("accessToken");
     const _refreshToken = localStorage.getItem("refreshToken");
-    // console.log("Stored tokens", _accessToken, _refreshToken);
     try {
       if (!_accessToken || !_refreshToken) {
         gotoLogin();
         return;
       }
-      setAccessToken(JSON.parse(_accessToken));
-      setRefreshToken(JSON.parse(_refreshToken));
+      accessToken.current = JSON.parse(_accessToken);
+      refreshToken.current = JSON.parse(_refreshToken);
     } catch (e) {
       console.log("Error setting tokens", e);
     }
@@ -93,12 +93,12 @@ export const AuthProvider: React.FC<{
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Refresh-Token": refreshToken.token,
+        "X-Refresh-Token": refreshToken.current?.token || "",
       },
     });
 
     if (result.ok) {
-      const response = await result.json();
+      const response = await result.json() as any;
       if (response.accessToken && response.refreshToken) {
         localStorage.setItem(
           "accessToken",
@@ -108,8 +108,8 @@ export const AuthProvider: React.FC<{
           "refreshToken",
           JSON.stringify(response.refreshToken)
         );
-        setAccessToken(response.accessToken);
-        setRefreshToken(response.refreshToken);
+        accessToken.current = response.accessToken;
+        refreshToken.current = response.refresh
         setAuthenticatedUser(response.user);
       }
     }
@@ -118,9 +118,9 @@ export const AuthProvider: React.FC<{
 
   const callValidateToken = useCallback(async () => {
     if (accessToken) {
-      validateToken(accessToken.token).then((res) => {
+      validateToken(accessToken.current?.token).then((res) => {
         if (res.ok) {
-          setAccessToken(res.accessToken);
+          accessToken.current = res.accessToken;
           localStorage.setItem("accessToken", JSON.stringify(res.accessToken));
           setAuthenticatedUser(res.user);
           setIsAuthenticated(true);
@@ -169,33 +169,33 @@ export const AuthProvider: React.FC<{
     await fetch(url, {
       method: "POST",
       headers: {
-        "X-Access-Token": accessToken?.token || "",
+        "X-Access-Token": accessToken?.current?.token || "",
       },
     });
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
-    setAccessToken(null);
-    setRefreshToken(null);
+    accessToken.current = null;
+    refreshToken.current = null;
     setIsAuthenticated(false);
     setAuthenticatedUser(null);
     gotoLogin();
   };
 
-  const validateToken = async (token: string) => {
+  const validateToken = async (token?: string) => {
     console.log("Validating token", token);
     const url = `${API_ENDPOINT}/auth/verify`;
     const result = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Access-Token": token,
+        "X-Access-Token": token || "",
       },
     });
 
     if (!result.ok) {
       return { ok: false };
     }
-    const response = await result.json();
+    const response = await result.json() as any;
     return {
       ok: response.ok,
       accessToken: response.accessToken,
@@ -217,7 +217,7 @@ export const AuthProvider: React.FC<{
     });
 
     if (result.ok) {
-      const response = await result.json();
+      const response = await result.json() as any;
       if (response.accessToken && response.refreshToken) {
         localStorage.setItem(
           "accessToken",
@@ -259,7 +259,7 @@ export const AuthProvider: React.FC<{
         validateMagicToken,
         loading,
         authenticatedUser,
-        accessToken: accessToken?.token || null,
+        accessToken: accessToken?.current?.token || null,
         refreshToken: callRefreshToken,
         gotoLogin,
       }}

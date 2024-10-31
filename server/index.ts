@@ -12,11 +12,15 @@ import { factory } from './factory';
 // import { auth } from '~/middleware/auth';
 // import { db } from '~/middleware/db';
 import { remix } from '~/middleware/remix';
+import { Hono } from 'hono';
+import auth from './auth';
+import { envDefaultsMiddleware } from './environment';
 // import { validateRequest } from '~/middleware/validate-request';
 
 export type ContextEnv = {
     Bindings: Required<Env>;
     Variables: {
+        serverUrl: string;
         // user: User | null;
         // session: Session | null;
     };
@@ -29,10 +33,11 @@ app.use(logger());
 app.use(prettyJSON({ space: 4 }));
 app.use(secureHeaders());
 app.use(trailingSlash());
+app.use(envDefaultsMiddleware)
 
-app.get('/api', (c) => {
-    return c.json({ message: 'Hello, World!' });
-});
+const api = new Hono<ContextEnv>();
+api.route('/auth', auth)
+app.route('/api', api);
 
 // app.use(db);
 // app.use(auth);
